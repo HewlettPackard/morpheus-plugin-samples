@@ -1,0 +1,97 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven { url "https://plugins.gradle.org/m2/" }
+		maven { url "https://nexus.bertramlabs.com/content/repositories/snapshots" }
+		maven { url "https://nexus.bertramlabs.com/content/repositories/releases" }
+		maven { url "https://nexus.bertramlabs.com/content/repositories/publicReleases" }
+    }
+    dependencies {
+        classpath "com.github.jengelman.gradle.plugins:shadow:6.0.0"
+		classpath "com.bertramlabs.plugins:asset-pipeline-gradle:3.4.0"
+		classpath "com.bertramlabs.plugins:jsx-asset-pipeline:3.4.0"
+    }
+}
+
+plugins {
+    id 'com.github.node-gradle.node' version '7.0.1' apply false
+}
+
+apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin:'asset-pipeline'
+
+
+// Apply node plugin for npm integration
+apply plugin: 'com.github.node-gradle.node'
+
+node {
+    version = '20.11.0'
+    npmVersion = '10.2.4'
+    download = true
+    nodeProjectDir = file("${project.projectDir}")
+}
+
+group = 'com.morpheusdata'
+version = '1.0.0'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    implementation "com.morpheusdata:morpheus-plugin-api:1.4.0-systems-SNAPSHOT"
+    implementation 'org.codehaus.groovy:groovy:3.0.9'
+    implementation 'org.codehaus.groovy:groovy-json:3.0.9'
+}
+
+shadowJar {
+    archiveBaseName.set('morpheus-system-example')
+    archiveClassifier.set('')
+    archiveVersion.set(project.version)
+}
+
+assets {
+	packagePlugin = false //set to true if this is a library
+	minifyJs = false
+}
+
+// Task to build the UI library with Vite
+task buildUILibrary(type: NpmTask) {
+    dependsOn npmInstall
+    args = ['run', 'build']
+    inputs.dir('ui-src')
+    outputs.dir('src/assets/js')
+}
+
+// Ensure UI library is built before processing assets
+processResources.dependsOn buildUILibrary
+classes.dependsOn buildUILibrary
+
+
+jar {
+	manifest {
+		attributes(
+			'Plugin-Class': 'com.morpheusdata.system.example.SystemExamplePlugin',
+			'Plugin-Version': version,
+			'Morpheus-Name': 'Arcus System Example Plugin',
+			'Morpheus-Organization': 'Morpheus Data',
+			'Morpheus-Code': 'morpheus-system-example',
+			'Morpheus-Description': 'Example plugin demonstrating System Provider, Configuration Workflow, Wizards, Forms, and Custom Input Types',
+			'Morpheus-Logo': 'assets/morpheus.svg',
+			'Morpheus-Logo-Dark': 'assets/morpheus.svg',
+			'Morpheus-Color': '#30B3E6',
+			'Morpheus-Labels': 'System Provider, Configuration Workflow, Wizards',
+			'Morpheus-Repo': 'https://github.com/gomorpheus/morpheus-plugin-core',
+			'Morpheus-Min-Appliance-Version': "7.0.0"
+		)
+	}
+}

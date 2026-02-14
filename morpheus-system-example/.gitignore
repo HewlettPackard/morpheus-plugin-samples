@@ -1,0 +1,23 @@
+# Node modules
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# Build outputs
+src/assets/js/arcus-input-types.js
+src/assets/js/arcus-input-types.css
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# OS
+.DS_Store
