@@ -3,14 +3,14 @@ buildscript {
         mavenLocal()
         mavenCentral()
         maven { url "https://plugins.gradle.org/m2/" }
-		maven { url "https://nexus.bertramlabs.com/content/repositories/snapshots" }
-		maven { url "https://nexus.bertramlabs.com/content/repositories/releases" }
-		maven { url "https://nexus.bertramlabs.com/content/repositories/publicReleases" }
+        maven { url "https://nexus.bertramlabs.com/content/repositories/snapshots" }
+        maven { url "https://nexus.bertramlabs.com/content/repositories/releases" }
+        maven { url "https://nexus.bertramlabs.com/content/repositories/publicReleases" }
     }
     dependencies {
         classpath "com.github.jengelman.gradle.plugins:shadow:6.0.0"
-		classpath "com.bertramlabs.plugins:asset-pipeline-gradle:3.4.0"
-		classpath "com.bertramlabs.plugins:jsx-asset-pipeline:3.4.0"
+        classpath "com.bertramlabs.plugins:asset-pipeline-gradle:3.4.0"
+        classpath "com.bertramlabs.plugins:jsx-asset-pipeline:3.4.0"
     }
 }
 
@@ -35,7 +35,7 @@ node {
 }
 
 group = 'com.morpheusdata'
-version = '1.0.0'
+version = '1.0.24'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
@@ -51,6 +51,7 @@ dependencies {
     implementation "com.morpheusdata:morpheus-plugin-api:1.4.0-systems-SNAPSHOT"
     implementation 'org.codehaus.groovy:groovy:3.0.9'
     implementation 'org.codehaus.groovy:groovy-json:3.0.9'
+    implementation 'io.reactivex.rxjava3:rxjava:3.1.8'
 }
 
 shadowJar {
@@ -60,8 +61,8 @@ shadowJar {
 }
 
 assets {
-	packagePlugin = false //set to true if this is a library
-	minifyJs = false
+    packagePlugin = false //set to true if this is a library
+    minifyJs = false
 }
 
 // Task to build the UI library with Vite
@@ -76,22 +77,25 @@ task buildUILibrary(type: NpmTask) {
 processResources.dependsOn buildUILibrary
 classes.dependsOn buildUILibrary
 
+assetCompile.dependsOn buildUILibrary
+
 
 jar {
-	manifest {
-		attributes(
-			'Plugin-Class': 'com.morpheusdata.system.example.SystemExamplePlugin',
-			'Plugin-Version': version,
-			'Morpheus-Name': 'Arcus System Example Plugin',
-			'Morpheus-Organization': 'Morpheus Data',
-			'Morpheus-Code': 'morpheus-system-example',
-			'Morpheus-Description': 'Example plugin demonstrating System Provider, Configuration Workflow, Wizards, Forms, and Custom Input Types',
-			'Morpheus-Logo': 'assets/morpheus.svg',
-			'Morpheus-Logo-Dark': 'assets/morpheus.svg',
-			'Morpheus-Color': '#30B3E6',
-			'Morpheus-Labels': 'System Provider, Configuration Workflow, Wizards',
-			'Morpheus-Repo': 'https://github.com/gomorpheus/morpheus-plugin-core',
-			'Morpheus-Min-Appliance-Version': "7.0.0"
-		)
-	}
+    manifest {
+        attributes(
+            'Plugin-Class': 'com.morpheusdata.system.example.SystemExamplePlugin',
+            'Plugin-Version': version,
+            'Morpheus-Name': 'Arcus System Example Plugin',
+            'Morpheus-Organization': 'Morpheus Data',
+            'Morpheus-Code': 'morpheus-system-example',
+            'Morpheus-Description': 'Example plugin demonstrating System Provider, Configuration Workflow, Wizards, Forms, and Custom Input Types',
+            'Morpheus-Logo': 'assets/morpheus.svg',
+            'Morpheus-Logo-Dark': 'assets/morpheus.svg',
+            'Morpheus-Color': '#30B3E6',
+            'Morpheus-Labels': 'System Provider, Configuration Workflow, Wizards',
+            'Morpheus-Repo': 'https://github.com/gomorpheus/morpheus-plugin-core',
+            'Morpheus-Min-Appliance-Version': "7.0.0"
+        )
+    }
 }
+
