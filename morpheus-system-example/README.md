@@ -126,8 +126,9 @@ Three levels of validation:
 ## Building the Plugin
 
 ```bash
-cd samples/morpheus-system-example
-../../gradlew shadowJar
+cd morpheus-plugin-samples/morpheus-system-example
+../gradlew shadowJar
+
 ```
 
 The built plugin JAR will be in `build/libs/morpheus-system-example-1.0.0.jar`
