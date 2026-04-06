@@ -13,7 +13,27 @@ import com.morpheusdata.model.system.System
 class SystemExampleCustomSummaryTabProvider extends AbstractSystemTabProvider {
 
 	Plugin plugin
-	MorpheusContext morpheus
+    MorpheusContext morpheusContext
+
+    SystemExampleCustomSummaryTabProvider(Plugin plugin, MorpheusContext morpheusContext) {
+        this.plugin = plugin
+        this.morpheusContext = morpheusContext
+    }
+
+    @Override
+    Plugin getPlugin() {
+        return plugin
+    }
+
+    @Override
+    MorpheusContext getMorpheus() {
+        return morpheusContext
+    }
+
+    @Override
+    Renderer<?> getRenderer() {
+        return null
+    }
 
 	String code = "arcus-system-example-tab"
 	String name = "Summary Tab"
@@ -23,11 +43,6 @@ class SystemExampleCustomSummaryTabProvider extends AbstractSystemTabProvider {
 
 	@Override
 	String getName() { name }
-
-	SystemExampleCustomSummaryTabProvider(Plugin plugin, MorpheusContext morpheus) {
-		this.plugin = plugin
-		this.morpheus = morpheus
-	}
 
 	@Override
 	Boolean show(System system, User user, Account account) {
