@@ -49,7 +49,8 @@ class ArcusSystemConfigurationWorkflowProvider extends com.morpheusdata.system.e
         def dataNetworkWizard = getWizardByCode('arcus-datanetwork-config-wizard')
         def clusterWizard = getWizardByCode('arcus-cluster-config-wizard')
         def prechecksWizard = getWizardByCode('arcus-prechecks-wizard')
-        
+        def singleStepWizard = getWizardByCode('single-step-form')
+
         return [
             new ConfigurationWorkflowStep(
                 code: 'system',
@@ -92,6 +93,12 @@ class ArcusSystemConfigurationWorkflowProvider extends com.morpheusdata.system.e
                 name: 'Prechecks',
                 description: 'Run system validation prechecks',
                 wizard: prechecksWizard
+            ),
+            new ConfigurationWorkflowStep(
+                code: 'single-step-form',
+                name: 'Single Step Form',
+                description: 'Single step configuration step for users',
+                wizard: singleStepWizard
             )
         ]
     }

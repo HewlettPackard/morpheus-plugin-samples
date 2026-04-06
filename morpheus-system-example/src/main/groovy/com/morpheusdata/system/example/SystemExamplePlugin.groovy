@@ -46,6 +46,8 @@ class SystemExamplePlugin extends Plugin {
             this.registerProvider(new ClusterConfigWizardProvider(this, morpheus))
             log.debug("Registering PrechecksWizardProvider")
             this.registerProvider(new PrechecksWizardProvider(this, morpheus))
+            log.debug("Registering SingleStepWizardProvider")
+            this.registerProvider(new SingleStepWizardProvider(this, morpheus))
 
             // PHASE 3: Register configuration workflow (depends on wizards)
             log.debug("Registering ArcusSystemConfigurationWorkflowProvider")
@@ -60,7 +62,6 @@ class SystemExamplePlugin extends Plugin {
             this.registerProvider(new SystemExampleCustomSwitchesTabProvider(this, morpheus))
             log.debug("Registering SystemExampleCustomSummaryTabProvider")
             this.registerProvider(new SystemExampleCustomSummaryTabProvider(this, morpheus))
-
             log.info("System Example Plugin initialized successfully")
         } catch (Exception e) {
             log.error("Error initializing System Example Plugin", e)
