@@ -25,7 +25,6 @@ class TabPlugin extends Plugin {
 		this.pluginProviders.put(customClusterTabProvider.code,customClusterTabProvider)
 		this.pluginProviders.put(customAppTabProvider.code,customAppTabProvider)
 		this.setName("Custom Tabs")
-		this.setPermissions([Permission.build('Custom Instance Tab','custom-instance-tab', [Permission.AccessType.none, Permission.AccessType.full])])
 		this.setRenderer(new HandlebarsRenderer(this.classLoader))
 		this.controllers.add(new CustomTabController(this, morpheus))
 	}
