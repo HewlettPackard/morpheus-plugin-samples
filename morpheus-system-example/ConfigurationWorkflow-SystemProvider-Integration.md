@@ -598,6 +598,7 @@ new OptionType(
     name: 'Storage Type',
     fieldName: 'storageType',
     fieldLabel: 'Storage Type',
+    fieldCode: 'gomorpheus.label.name' // localization i18n Key
     fieldContext: 'config',
     inputType: OptionType.InputType.SELECT,
     optionSource: 'storageTypes',        // References DatasetProvider key
@@ -906,5 +907,6 @@ Configuration Workflow Providers extend System Providers by:
 5. **Providing guided user experience for system setup** through wizard-based forms
 6. **Using direct object references with type safety** - `configurationWorkflow` directly references ConfigurationWorkflow object, `wizard` directly references Wizard object. ConfigurationWorkflowStep can dynamically load wizards from WizardProvider using `wizardProvider.getWizard()` for fresh data, or use stored references when providers are unavailable. The providers remain loosely coupled and are discovered via the model's code field.
 7. **Requiring DatasetProviders for option lists** - OptionTypes do NOT support inline `optionList`, must use `optionSource`/`optionSourceType`
+8. **OptionTypes Localization** - Plugins should pass through the expected i18n fields if localization is expected in OptionType(e.g., fieldCode, helpBlockFieldCode, fieldGroupCode) for the UI to resolve. 
 
 This architecture enables plugin developers to create sophisticated, user-friendly configuration experiences while maintaining clean separation of concerns between system management and configuration workflows. The direct object reference pattern provides type safety, while the dynamic wizard loading from providers ensures current data and flexibility.
