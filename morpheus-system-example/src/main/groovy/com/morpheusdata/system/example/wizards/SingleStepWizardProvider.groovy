@@ -45,9 +45,11 @@ class SingleStepWizardProvider extends com.morpheusdata.system.example.BaseProvi
                 name: 'Name',
                 fieldName: 'name',
                 fieldLabel: 'Configuration Name',
-                fieldCode: 'gomorpheus.label.name',
+                fieldCode: 'gomorpheus.label.password',
                 fieldContext: 'config',
                 inputType: OptionType.InputType.TEXT,
+                helpBlock: 'Enter the name for this configuration',
+                helpBlockFieldCode: 'gomorpheus.label.name',
                 required: true,
                 displayOrder: 0
             ),
