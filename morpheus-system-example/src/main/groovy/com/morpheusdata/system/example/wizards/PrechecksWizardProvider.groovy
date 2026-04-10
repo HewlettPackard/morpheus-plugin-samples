@@ -115,13 +115,14 @@ class PrechecksWizardProvider extends com.morpheusdata.system.example.BaseProvid
     @Override
     ServiceResponse submitWizard(Map wizardData, Map opts) {
         def selection = wizardData['check-selection'] ?: [:]
+        def execution = wizardData['run-checks'] ?: [:]
         
         // In a real implementation, this would run actual prechecks based on selection
         return ServiceResponse.success([
-            checksRun: true,
             networkChecks: selection['networkChecks'] ?: false,
             storageChecks: selection['storageChecks'] ?: false,
             hostChecks: selection['hostChecks'] ?: false,
+            confirmRun: execution['confirmRun'] ?: false,
             passed: true,
             message: 'All selected prechecks passed successfully'
         ])

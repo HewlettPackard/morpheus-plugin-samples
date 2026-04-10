@@ -106,14 +106,16 @@ class ArcusSystemConfigurationWorkflowProvider extends com.morpheusdata.system.e
     @Override
     ServiceResponse saveStepConfiguration(String stepCode, Map stepData, Map currentState, Map opts) {
         // Merge the step data into the current state
-        if (!currentState) {
-            currentState = [:]
-        }
-        currentState[stepCode] = stepData
-        currentState['lastCompletedStep'] = stepCode
-        currentState['lastUpdated'] = new Date()
-        
-        return ServiceResponse.success(currentState)
+
+        def updatedState = currentState ? [:] + currentState : [:]
+
+        updatedState[stepCode] = stepData
+        updatedState.lastCompletedStep = stepCode
+        updatedState.lastUpdated = new Date()
+
+        return ServiceResponse.success([
+            workflowState: updatedState
+        ])
     }
 
     @Override
