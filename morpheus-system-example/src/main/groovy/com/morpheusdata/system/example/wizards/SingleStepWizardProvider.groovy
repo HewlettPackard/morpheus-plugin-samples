@@ -34,8 +34,8 @@ class SingleStepWizardProvider extends com.morpheusdata.system.example.BaseProvi
     List<WizardStep> getWizardSteps() {
 
         WizardStep step = new WizardStep(
-            code: 'single-step-form',
-            name: 'Single Step Form',
+            code: 'step 1',
+            name: 'Single Step Form Step 1',
             description: 'Enter single step form details'
         )
 
@@ -48,8 +48,6 @@ class SingleStepWizardProvider extends com.morpheusdata.system.example.BaseProvi
                 fieldCode: 'gomorpheus.label.name', //Added diffrent locale to show diff between fieldLabel and fieldCode(translation key)
                 fieldContext: 'config',
                 inputType: OptionType.InputType.TEXT,
-                helpBlock: 'Enter the name for this configuration',
-                helpBlockFieldCode: 'gomorpheus.label.configuration',//Added diffrent locale to show diff between helpBlock and helpBlockFieldCode(translation key)
                 required: true,
                 displayOrder: 0
             ),
@@ -73,7 +71,7 @@ class SingleStepWizardProvider extends com.morpheusdata.system.example.BaseProvi
     ServiceResponse validateWizard(Map wizardData, Map opts) {
         def errors = new FormErrors()
 
-        def step = wizardData['quick-config-step']
+        def step = wizardData['step 1']
         if(!step?.name) {
             errors.addError('name', 'Name is required')
         }
@@ -87,6 +85,6 @@ class SingleStepWizardProvider extends com.morpheusdata.system.example.BaseProvi
 
     @Override
     ServiceResponse submitWizard(Map wizardData, Map opts) {
-        return ServiceResponse.success(wizardData['quick-config-step'])
+        return ServiceResponse.success(wizardData['step 1'])
     }
 }

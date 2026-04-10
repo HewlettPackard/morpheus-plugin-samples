@@ -30,11 +30,6 @@ class SystemExampleCustomSummaryTabProvider extends AbstractSystemTabProvider {
         return morpheusContext
     }
 
-    @Override
-    Renderer<?> getRenderer() {
-        return null
-    }
-
 	String code = "arcus-system-example-tab"
 	String name = "Summary Tab"
 
