@@ -385,7 +385,7 @@ Final submission triggers the actual system configuration:
 
 ```groovy
 @Override
-ServiceResponse submitOrchestration(Map configurationWorkflowState, Object parentObject, Map opts) {
+ServiceResponse submitConfigurationWorkflow(Map configurationWorkflowState, Object parentObject, Map opts) {
     if (!(parentObject instanceof System)) {
         return ServiceResponse.error('Invalid parent object type')
     }
@@ -903,7 +903,7 @@ Configuration Workflow Providers extend System Providers by:
 1. **Defining structured, multi-step configuration processes** via `getWorkflowSteps()`
 2. **Managing state across workflow steps** via `saveStepConfiguration()` and `updateParentState()`
 3. **Enabling complex validation logic** via `validateConfigurationWorkflow()`
-4. **Coordinating with System Provider lifecycle methods** via `submitOrchestration()`
+4. **Coordinating with System Provider lifecycle methods** via `submitConfigurationWorkflow()`
 5. **Providing guided user experience for system setup** through wizard-based forms
 6. **Using direct object references with type safety** - `configurationWorkflow` directly references ConfigurationWorkflow object, `wizard` directly references Wizard object. ConfigurationWorkflowStep can dynamically load wizards from WizardProvider using `wizardProvider.getWizard()` for fresh data, or use stored references when providers are unavailable. The providers remain loosely coupled and are discovered via the model's code field.
 7. **Requiring DatasetProviders for option lists** - OptionTypes do NOT support inline `optionList`, must use `optionSource`/`optionSourceType`
