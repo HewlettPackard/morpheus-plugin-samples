@@ -3,6 +3,8 @@ package com.morpheusdata.system.example.workflow
 import com.morpheusdata.core.providers.ConfigurationWorkflowProvider
 import com.morpheusdata.model.ConfigurationWorkflowStep
 import com.morpheusdata.response.ServiceResponse
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
 
 /**
  * Configuration workflow provider for Arcus system setup
@@ -31,7 +33,7 @@ class ArcusSystemConfigurationWorkflowProvider extends com.morpheusdata.system.e
 
     @Override
     String getWorkflowDescription() {
-        return 'Complete configuration workflow workflow for configuring an Arcus infrastructure system'
+        return 'Complete configuration workflow for configuring an Arcus infrastructure system'
     }
 
     @Override
@@ -128,10 +130,12 @@ class ArcusSystemConfigurationWorkflowProvider extends com.morpheusdata.system.e
             return ServiceResponse.error("Invalid parent object type: ${parentObject.getClass().name}")
         }
 
-        def jsonState = groovy.json.JsonOutput.toJson(configurationWorkflowState)
+        def jsonState = JsonOutput.toJson(configurationWorkflowState)
         parentObject.setConfigurationWorkflowState(jsonState)
 
-        return ServiceResponse.success()
+        return ServiceResponse.success([
+            workflowState: configurationWorkflowState
+        ])
     }
 
     @Override
@@ -175,13 +179,15 @@ class ArcusSystemConfigurationWorkflowProvider extends com.morpheusdata.system.e
         configurationWorkflowState.status = 'submitted'
         configurationWorkflowState.submittedDate = new Date()
         configurationWorkflowState.completed = true
+        configurationWorkflowState.lastUpdated = new Date()
 
-        def jsonState = groovy.json.JsonOutput.toJson(configurationWorkflowState)
+        def jsonState = JsonOutput.toJson(configurationWorkflowState)
         parentObject.setConfigurationWorkflowState(jsonState)
 
         return ServiceResponse.success([
             message: 'Arcus system configuration submitted successfully',
-            systemId: parentObject.hasProperty('id') ? parentObject.id : null
+            systemId: parentObject.hasProperty('id') ? parentObject.id : null,
+            workflowState: configurationWorkflowState
         ])
     }
 
@@ -197,7 +203,7 @@ class ArcusSystemConfigurationWorkflowProvider extends com.morpheusdata.system.e
 
         def stateJson = parentObject.getConfigurationWorkflowState()
         if (stateJson) {
-            return new groovy.json.JsonSlurper().parseText(stateJson)
+            return new JsonSlurper().parseText(stateJson) as Map
         }
         return [:]
     }
