@@ -143,8 +143,7 @@ class ArcusSystemConfigurationWorkflowProvider extends com.morpheusdata.system.e
         def errors = []
         
         // Validate that all required steps are completed
-        // def requiredSteps = ['system', 'switches', 'hosts', 'storage', 'data-network', 'cluster']
-        def requiredSteps = ['hosts', 'cluster']
+        def requiredSteps = ['system', 'switches', 'hosts', 'storage', 'data-network', 'cluster']
         requiredSteps.each { step ->
             if (!configurationWorkflowState[step]) {
                 errors << "Step '${step}' must be completed before submission"
@@ -168,6 +167,8 @@ class ArcusSystemConfigurationWorkflowProvider extends com.morpheusdata.system.e
 
     @Override
     ServiceResponse submitConfigurationWorkflow(Map configurationWorkflowState, Object parentObject, Map opts) {
+        // This would typically call another long-running method to execute the setup
+        // For now, we'll just mark it as submitted
         if (!parentObject) {
             return ServiceResponse.error('Missing parent object')
         }
@@ -175,15 +176,19 @@ class ArcusSystemConfigurationWorkflowProvider extends com.morpheusdata.system.e
         if (!parentObject.metaClass.respondsTo(parentObject, 'setConfigurationWorkflowState', String)) {
             return ServiceResponse.error("Invalid parent object type: ${parentObject.getClass().name}")
         }
-
+        
+        // Update configurationWorkflowState with submission info
         configurationWorkflowState.status = 'submitted'
         configurationWorkflowState.submittedDate = new Date()
         configurationWorkflowState.completed = true
         configurationWorkflowState.lastUpdated = new Date()
 
+        // Update the system's configurationWorkflowState
         def jsonState = JsonOutput.toJson(configurationWorkflowState)
         parentObject.setConfigurationWorkflowState(jsonState)
 
+        // In a real implementation, this would trigger the actual setup process
+        // For example: executeSystemSetup(system, configurationWorkflowState)
         return ServiceResponse.success([
             message: 'Arcus system configuration submitted successfully',
             systemId: parentObject.hasProperty('id') ? parentObject.id : null,
