@@ -3,6 +3,8 @@ package com.morpheusdata.system.example.workflow
 import com.morpheusdata.core.providers.ConfigurationWorkflowProvider
 import com.morpheusdata.model.ConfigurationWorkflowStep
 import com.morpheusdata.response.ServiceResponse
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
 
 /**
  * Configuration workflow provider for Arcus system setup
@@ -31,7 +33,7 @@ class ArcusSystemConfigurationWorkflowProvider extends com.morpheusdata.system.e
 
     @Override
     String getWorkflowDescription() {
-        return 'Complete configuration workflow workflow for configuring an Arcus infrastructure system'
+        return 'Complete configuration workflow for configuring an Arcus infrastructure system'
     }
 
     @Override
@@ -106,30 +108,34 @@ class ArcusSystemConfigurationWorkflowProvider extends com.morpheusdata.system.e
     @Override
     ServiceResponse saveStepConfiguration(String stepCode, Map stepData, Map currentState, Map opts) {
         // Merge the step data into the current state
-        if (!currentState) {
-            currentState = [:]
-        }
-        currentState[stepCode] = stepData
-        currentState['lastCompletedStep'] = stepCode
-        currentState['lastUpdated'] = new Date()
-        
-        return ServiceResponse.success(currentState)
+
+        def updatedState = currentState ? [:] + currentState : [:]
+
+        updatedState[stepCode] = stepData
+        updatedState.lastCompletedStep = stepCode
+        updatedState.lastUpdated = new Date()
+
+        return ServiceResponse.success([
+            workflowState: updatedState
+        ])
     }
 
     @Override
     ServiceResponse updateParentState(Object parentObject, Map configurationWorkflowState, Map opts) {
-        // Update the System model's configurationWorkflowState field
-        if (parentObject instanceof com.morpheusdata.model.system.System) {
-            def system = parentObject as com.morpheusdata.model.system.System
-            
-            // Convert configurationWorkflowState to JSON string
-            def jsonState = groovy.json.JsonOutput.toJson(configurationWorkflowState)
-            system.setConfigurationWorkflowState(jsonState)
-            
-            return ServiceResponse.success()
+        if (!parentObject) {
+            return ServiceResponse.error('Missing parent object')
         }
-        
-        return ServiceResponse.error('Invalid parent object type')
+
+        if (!parentObject.metaClass.respondsTo(parentObject, 'setConfigurationWorkflowState', String)) {
+            return ServiceResponse.error("Invalid parent object type: ${parentObject.getClass().name}")
+        }
+
+        def jsonState = JsonOutput.toJson(configurationWorkflowState)
+        parentObject.setConfigurationWorkflowState(jsonState)
+
+        return ServiceResponse.success([
+            workflowState: configurationWorkflowState
+        ])
     }
 
     @Override
@@ -163,43 +169,47 @@ class ArcusSystemConfigurationWorkflowProvider extends com.morpheusdata.system.e
     ServiceResponse submitConfigurationWorkflow(Map configurationWorkflowState, Object parentObject, Map opts) {
         // This would typically call another long-running method to execute the setup
         // For now, we'll just mark it as submitted
-        
-        if (parentObject instanceof com.morpheusdata.model.system.System) {
-            def system = parentObject as com.morpheusdata.model.system.System
-            
-            // Update configurationWorkflowState with submission info
-            configurationWorkflowState['status'] = 'submitted'
-            configurationWorkflowState['submittedDate'] = new Date()
-            configurationWorkflowState['completed'] = true
-            
-            // Update the system's configurationWorkflowState
-            def jsonState = groovy.json.JsonOutput.toJson(configurationWorkflowState)
-            system.setConfigurationWorkflowState(jsonState)
-            
-            // In a real implementation, this would trigger the actual setup process
-            // For example: executeSystemSetup(system, configurationWorkflowState)
-            
-            return ServiceResponse.success([
-                message: 'Arcus system configuration submitted successfully',
-                systemId: system.getId()
-            ])
+        if (!parentObject) {
+            return ServiceResponse.error('Missing parent object')
+        }
+
+        if (!parentObject.metaClass.respondsTo(parentObject, 'setConfigurationWorkflowState', String)) {
+            return ServiceResponse.error("Invalid parent object type: ${parentObject.getClass().name}")
         }
         
-        return ServiceResponse.error('Invalid parent object type')
+        // Update configurationWorkflowState with submission info
+        configurationWorkflowState.status = 'submitted'
+        configurationWorkflowState.submittedDate = new Date()
+        configurationWorkflowState.completed = true
+        configurationWorkflowState.lastUpdated = new Date()
+
+        // Update the system's configurationWorkflowState
+        def jsonState = JsonOutput.toJson(configurationWorkflowState)
+        parentObject.setConfigurationWorkflowState(jsonState)
+
+        // In a real implementation, this would trigger the actual setup process
+        // For example: executeSystemSetup(system, configurationWorkflowState)
+        return ServiceResponse.success([
+            message: 'Arcus system configuration submitted successfully',
+            systemId: parentObject.hasProperty('id') ? parentObject.id : null,
+            workflowState: configurationWorkflowState
+        ])
     }
 
     @Override
     Map getConfigurationWorkflowState(Object parentObject, Map opts) {
-        if (parentObject instanceof com.morpheusdata.model.system.System) {
-            def system = parentObject as com.morpheusdata.model.system.System
-            def stateJson = system.getConfigurationWorkflowState()
-            
-            if (stateJson) {
-                def slurper = new groovy.json.JsonSlurper()
-                return slurper.parseText(stateJson)
-            }
+        if (!parentObject) {
+            return [:]
         }
-        
+
+        if (!parentObject.metaClass.respondsTo(parentObject, 'getConfigurationWorkflowState')) {
+            return [:]
+        }
+
+        def stateJson = parentObject.getConfigurationWorkflowState()
+        if (stateJson) {
+            return new JsonSlurper().parseText(stateJson) as Map
+        }
         return [:]
     }
 
