@@ -70,6 +70,9 @@ class HostConfigWizardProvider extends com.morpheusdata.system.example.BaseProvi
                 name: 'IPMI Username',
                 fieldName: 'ipmiUsername',
                 fieldLabel: 'IPMI Username',
+                fieldCode: 'gomorpheus.label.username', // Example of using an i18n code for the label, this key can come from plugin locales
+                helpText: 'Username for IPMI or iLO management interface',
+                helpTextI18nCode: 'gomorpheus.label.help',// Example of using an i18n code for help text, this key can come from plugin locales
                 fieldContext: 'config',
                 inputType: OptionType.InputType.TEXT,
                 required: true,
@@ -80,6 +83,9 @@ class HostConfigWizardProvider extends com.morpheusdata.system.example.BaseProvi
                 name: 'IPMI Password',
                 fieldName: 'ipmiPassword',
                 fieldLabel: 'IPMI Password',
+                fieldCode: 'gomorpheus.label.password', // Example of using an i18n code for the label, this key can come from plugin locales
+                helpText: 'Password for IPMI or iLO management interface',
+                helpTextI18nCode: 'gomorpheus.label.help',// Example of using an i18n code for help text, this key can come from plugin locales
                 fieldContext: 'config',
                 inputType: OptionType.InputType.PASSWORD,
                 required: true,
