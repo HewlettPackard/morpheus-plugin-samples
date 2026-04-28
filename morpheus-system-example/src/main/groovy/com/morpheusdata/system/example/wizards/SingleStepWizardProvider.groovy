@@ -39,6 +39,24 @@ class SingleStepWizardProvider extends com.morpheusdata.system.example.BaseProvi
             description: 'Enter single step form details'
         )
 
+         def StepInfoPanel = new OptionType(
+            code: 'InfoPanel',
+            name: 'Step Information',
+            fieldName: 'StepInfoPanel',
+            fieldLabel: 'Step Overview',
+            fieldContext: 'config',
+            inputType: new OptionType.InputType('infoPanel'), //as per core model
+            required: false,
+            displayOrder: 0
+        )
+
+        StepInfoPanel.setConfigMap([
+            isFullWidth: true,
+            variant: 'info',
+            title: 'Before you run this step',
+            description: 'Fill in the required fields.' //sample text, can be customized as needed
+        ])
+
         step.optionTypes = [
             new OptionType(
                 code: 'name',
@@ -49,7 +67,7 @@ class SingleStepWizardProvider extends com.morpheusdata.system.example.BaseProvi
                 fieldContext: 'config',
                 inputType: OptionType.InputType.TEXT,
                 required: true,
-                displayOrder: 0
+                displayOrder: 1
             ),
             new OptionType(
                 code: 'enable',
@@ -60,8 +78,9 @@ class SingleStepWizardProvider extends com.morpheusdata.system.example.BaseProvi
                 fieldContext: 'config',
                 inputType: OptionType.InputType.CHECKBOX,
                 required: false,
-                displayOrder: 1
-            )
+                displayOrder: 2
+            ),
+            StepInfoPanel
         ]
 
         return [step]
