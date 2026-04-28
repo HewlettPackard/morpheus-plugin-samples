@@ -9,16 +9,18 @@
 	],
 	"scripts": {
 		"dev": "vite",
-		"build": "vite build",
+		"build": "vite build && vite build --config vite.react-tab.config.js",
+		"build:input-types": "vite build",
+		"build:react-tab": "vite build --config vite.react-tab.config.js",
 		"preview": "vite preview"
 	},
 	"devDependencies": {
 		"@vitejs/plugin-react": "^4.2.1",
 		"focus-ui": "^3.0.259",
-		"vite": "^5.0.11"
+		"vite": "^8.0.10"
 	},
 	"peerDependencies": {
-		"react": "^18.0.0",
-		"focus-ui": "^3.0.0"
+		"focus-ui": "^3.0.0",
+		"react": "^19.0.0"
 	}
 }

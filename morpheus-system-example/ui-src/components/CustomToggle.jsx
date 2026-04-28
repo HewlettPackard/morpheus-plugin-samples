@@ -5,7 +5,7 @@
  * Perfect for boolean settings with enhanced visual feedback.
  */
 
-import React, { useCallback } from "react";
+import { useCallback } from "react";
 
 const { Switch } = window.FocusUI;
 
@@ -65,10 +65,11 @@ const CustomToggle = (props) => {
 
 // Registration function
 CustomToggle.register = () => {
-	window.Morpheus.components.register("custom-toggle", CustomToggle, {
+	window.Morpheus.components.registerNew("custom-toggle", CustomToggle, {
 		type: "optionType",
 		name: "Custom Toggle Switch",
 		group: "custom",
+		reactVersionOlderThan19: false,
 		details: [
 			{
 				fieldLabel: "On Label",

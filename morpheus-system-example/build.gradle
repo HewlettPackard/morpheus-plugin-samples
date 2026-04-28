@@ -28,14 +28,14 @@ apply plugin:'asset-pipeline'
 apply plugin: 'com.github.node-gradle.node'
 
 node {
-    version = '20.11.0'
-    npmVersion = '10.2.4'
+    version = '20.19.0'
+    npmVersion = '10.8.2'
     download = true
     nodeProjectDir = file("${project.projectDir}")
 }
 
 group = 'com.morpheusdata'
-version = '1.0.3'
+version = 'TEST-1.0.10'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11

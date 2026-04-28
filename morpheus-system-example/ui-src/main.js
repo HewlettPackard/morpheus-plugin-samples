@@ -9,28 +9,30 @@ import CustomSlider from "./components/CustomSlider";
 import CustomToggle from "./components/CustomToggle";
 import CustomRating from "./components/CustomRating";
 
-// Ensure Morpheus and Focus-UI are available
-if (
-	typeof window.Morpheus === "undefined" ||
-	!window.Morpheus.components ||
-	!window.Morpheus.components.registry
-) {
-	console.error("Morpheus component registry not available");
-	throw new Error("Morpheus component registry not available");
-}
-
-if (!window.FocusUI) {
-	console.error("Focus-UI library not available");
-	throw new Error("Focus-UI library not available");
-}
-
-// Register all custom components
 const components = [CustomSlider, CustomToggle, CustomRating];
 
-components.forEach((component) => {
-	if (component && component.register) {
-		component.register();
+const registerComponents = () => {
+	if (!window.Morpheus?.components?.registerNew) {
+		console.error("Morpheus React 19 component registry not available");
+		throw new Error("Morpheus React 19 component registry not available");
 	}
-});
 
-console.log(`Arcus Input Types Library loaded: ${components.length} components registered`);
+	if (!window.FocusUI) {
+		console.error("Focus-UI library not available");
+		throw new Error("Focus-UI library not available");
+	}
+
+	components.forEach(component => {
+		component?.register?.();
+	});
+
+	console.log(`Arcus Input Types Library loaded: ${components.length} components registered`);
+};
+
+if (window.Morpheus?.components?.registerNew) {
+	registerComponents();
+} else {
+	window.addEventListener("morpheus:registry:ready", registerComponents, {
+		once: true
+	});
+}
