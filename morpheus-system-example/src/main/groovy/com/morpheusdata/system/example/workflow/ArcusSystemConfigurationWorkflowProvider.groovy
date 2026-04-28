@@ -58,48 +58,56 @@ class ArcusSystemConfigurationWorkflowProvider extends com.morpheusdata.system.e
                 code: 'system',
                 name: 'System',
                 description: 'Configure basic system settings',
+                 dependsOn: [], // This step depends on no other steps
                 wizard: systemWizard
             ),
             new ConfigurationWorkflowStep(
                 code: 'switches',
                 name: 'Switches',
                 description: 'Configure network switches',
+                dependsOn: ['system'], // This step depends on the 'system' step being completed
                 wizard: switchWizard
             ),
             new ConfigurationWorkflowStep(
                 code: 'hosts',
                 name: 'Hosts',
                 description: 'Configure host servers',
+                dependsOn: ['system', 'switches'], // This step depends on the 'system' and 'switches' steps being completed
                 wizard: hostWizard
             ),
             new ConfigurationWorkflowStep(
                 code: 'storage',
                 name: 'Storage',
                 description: 'Configure storage arrays',
+                dependsOn: ['system', 'switches', 'hosts'], // This step depends on the 'system', 'switches', and 'hosts' steps being completed
                 wizard: storageWizard
             ),
             new ConfigurationWorkflowStep(
                 code: 'data-network',
                 name: 'Data Network',
                 description: 'Configure data network settings',
+                dependsOn: ['system', 'switches', 'hosts', 'storage'], // This step depends on the 'system', 'switches', and 'hosts' steps being completed
                 wizard: dataNetworkWizard
             ),
             new ConfigurationWorkflowStep(
                 code: 'cluster',
                 name: 'Cluster',
                 description: 'Configure cluster settings',
+                dependsOn: ['system', 'switches', 'hosts', 'storage', 'data-network'], // This step depends on the 'system', 'switches', and 'hosts' steps being completed
                 wizard: clusterWizard
             ),
             new ConfigurationWorkflowStep(
                 code: 'prechecks',
                 name: 'Prechecks',
                 description: 'Run system validation prechecks',
+                dependsOn: ['system', 'switches', 'hosts', 'storage', 'data-network', 'cluster'], // This step depends on all previous steps being completed
                 wizard: prechecksWizard
             ),
             new ConfigurationWorkflowStep(
                 code: 'single-step-form',
                 name: 'Single Step Form',
                 description: 'Single step configuration step for users',
+                dependsOn: [], // This step has no dependencies and can be completed at any time
                 wizard: singleStepWizard
             )
         ]
