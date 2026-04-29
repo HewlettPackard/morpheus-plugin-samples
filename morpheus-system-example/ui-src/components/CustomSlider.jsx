@@ -76,7 +76,6 @@ CustomSlider.register = () => {
 		type: "optionType",
 		name: "Custom Slider",
 		group: "custom",
-		reactVersionOlderThan19: false,
 		details: [
 			{
 				fieldLabel: "Minimum Value",
