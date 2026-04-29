@@ -8,7 +8,7 @@
  * and theme support (light/dark mode).
  */
 
-import React, { useCallback } from "react";
+import { useCallback } from "react";
 import { Slider } from "focus-ui";
 
 const CustomSlider = (props) => {
@@ -72,10 +72,11 @@ const CustomSlider = (props) => {
 
 // Registration function
 CustomSlider.register = () => {
-	window.Morpheus.components.register("custom-slider", CustomSlider, {
+	window.Morpheus.components.registerNew("custom-slider", CustomSlider, {
 		type: "optionType",
 		name: "Custom Slider",
 		group: "custom",
+		reactVersionOlderThan19: false,
 		details: [
 			{
 				fieldLabel: "Minimum Value",

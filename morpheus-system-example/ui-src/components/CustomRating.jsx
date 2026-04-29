@@ -108,10 +108,11 @@ const CustomRating = (props) => {
 
 // Registration function
 CustomRating.register = () => {
-	window.Morpheus.components.register("custom-rating", CustomRating, {
+	window.Morpheus.components.registerNew("custom-rating", CustomRating, {
 		type: "optionType",
 		name: "Custom Rating",
 		group: "custom",
+		reactVersionOlderThan19: false,
 		details: [
 			{
 				fieldLabel: "Maximum Rating",
