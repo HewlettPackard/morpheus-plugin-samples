@@ -69,7 +69,6 @@ CustomToggle.register = () => {
 		type: "optionType",
 		name: "Custom Toggle Switch",
 		group: "custom",
-		reactVersionOlderThan19: false,
 		details: [
 			{
 				fieldLabel: "On Label",

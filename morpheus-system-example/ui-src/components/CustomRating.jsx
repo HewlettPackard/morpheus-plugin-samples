@@ -112,7 +112,6 @@ CustomRating.register = () => {
 		type: "optionType",
 		name: "Custom Rating",
 		group: "custom",
-		reactVersionOlderThan19: false,
 		details: [
 			{
 				fieldLabel: "Maximum Rating",
