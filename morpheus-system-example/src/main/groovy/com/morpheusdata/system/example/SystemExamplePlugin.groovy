@@ -5,7 +5,9 @@ import com.morpheusdata.model.Icon
 import com.morpheusdata.system.example.datasets.StorageTypeDatasetProvider
 import com.morpheusdata.system.example.workflow.ArcusSystemConfigurationWorkflowProvider
 import com.morpheusdata.system.example.wizards.*
-import com.morpheusdata.system.example.tabs.*
+import com.morpheusdata.system.example.tabs.SystemExampleCustomReactContentTabProvider
+import com.morpheusdata.system.example.tabs.SystemExampleCustomReactContentWithFocusUITabProvider
+
 import groovy.util.logging.Slf4j
 /**
  * Example System Provider Plugin demonstrating configuration workflow workflow
@@ -58,10 +60,10 @@ class SystemExamplePlugin extends Plugin {
             this.registerProvider(new ArcusSystemProvider(this, morpheus))
 
             // PHASE 5: Register tab providers (UI components)
-            log.debug("Registering SystemExampleCustomSwitchesTabProvider")
-            this.registerProvider(new SystemExampleCustomSwitchesTabProvider(this, morpheus))
-            log.debug("Registering SystemExampleCustomSummaryTabProvider")
-            this.registerProvider(new SystemExampleCustomSummaryTabProvider(this, morpheus))
+            log.debug("Registering SystemExampleCustomReactContentTabProvider")
+            this.registerProvider(new SystemExampleCustomReactContentTabProvider(this, morpheus))
+            log.debug("Registering SystemExampleCustomReactContentWithFocusUITabProvider")
+            this.registerProvider(new SystemExampleCustomReactContentWithFocusUITabProvider(this, morpheus))
             log.info("System Example Plugin initialized successfully")
         } catch (Exception e) {
             log.error("Error initializing System Example Plugin", e)

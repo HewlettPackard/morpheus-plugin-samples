@@ -17,6 +17,11 @@ buildscript {
 plugins {
     id 'com.github.node-gradle.node' version '7.0.1' apply false
 }
+import org.apache.tools.ant.filters.ReplaceTokens
+
+def uiBuildVersion = new Date().format("yyyyMMddHHmmss")
+
+
 
 apply plugin: 'java'
 apply plugin: 'groovy'
@@ -35,7 +40,7 @@ node {
 }
 
 group = 'com.morpheusdata'
-version = 'TEST-1.0.10'
+version = "TEST-1.0.${uiBuildVersion}-SNAPSHOT"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
@@ -75,11 +80,34 @@ task buildUILibrary(type: NpmTask) {
     outputs.dir('src/assets/js')
 }
 
+task buildReactTab(type: NpmTask) {
+    dependsOn npmInstall
+    args = ['run', 'build:react-tab']
+    inputs.dir('ui-src/tabs')
+    inputs.file('vite.react-tab.config.js')
+	inputs.file('package.json')
+	inputs.file('package-lock.json')
+    // Both tabs come out of one output file – no extra outputs needed
+    outputs.file('src/assets/js/arcus-system-tab.js')
+}
+
 // Ensure UI library is built before processing assets
 processResources.dependsOn buildUILibrary
 classes.dependsOn buildUILibrary
 
 assetCompile.dependsOn buildUILibrary
+
+processResources {
+    dependsOn buildReactTab
+    filesMatching("renderer/hbs/tabs/*.hbs") {
+		filter(ReplaceTokens, tokens: [
+			PLUGIN_UI_BUILD_VERSION: uiBuildVersion
+		])
+	}
+}
+classes.dependsOn buildReactTab
+
+assetCompile.dependsOn buildReactTab
 
 
 jar {

@@ -1,5 +1,4 @@
-package com.morpheusdata.system.example
-
+package com.morpheusdata.system.example.tabs
 import com.morpheusdata.core.providers.AbstractSystemTabProvider
 import com.morpheusdata.core.MorpheusContext
 import com.morpheusdata.core.Plugin
@@ -9,16 +8,16 @@ import com.morpheusdata.views.HTMLResponse
 import com.morpheusdata.views.ViewModel
 import com.morpheusdata.model.TaskConfig
 import com.morpheusdata.model.ContentSecurityPolicy
-
+import groovy.json.JsonOutput
 import com.morpheusdata.model.system.System
 
-class SystemExampleCustomSwitchesTabProvider extends AbstractSystemTabProvider {
+class SystemExampleCustomReactContentTabProvider extends AbstractSystemTabProvider {
 
 	Plugin plugin
 	MorpheusContext morpheus
 
-	String code = "arcus-system-switches-tab"
-	String name = "Switches Tab"
+	String code = "arcus-system-react-content-tab"
+	String name = "React Content Tab"
 
 	@Override
 	String getCode() { code }
@@ -29,21 +28,28 @@ class SystemExampleCustomSwitchesTabProvider extends AbstractSystemTabProvider {
 	@Override
 	Integer getOrder() { 1 }
 
-	SystemExampleCustomSwitchesTabProvider(Plugin plugin, MorpheusContext morpheus) {
+	SystemExampleCustomReactContentTabProvider(Plugin plugin, MorpheusContext morpheus) {
 		this.plugin = plugin
 		this.morpheus = morpheus
 	}
 
 	@Override
 	Boolean show(System system, User user, Account account) {
-		return true
+		return system?.type?.code == "arcus-system" &&
+			system?.layout?.code == "arcus-standard-layout"
 	}
 
 	@Override
 	HTMLResponse renderTemplate(System system) {
 		ViewModel<System> model = new ViewModel<>()
-		model.object = system
-		return getRenderer().renderTemplate("hbs/tabs/switchesTab", model)
+		model.object = [
+			system    : system,
+			systemJson: JsonOutput.toJson([
+				id    : system.id,
+				name  : system.name
+			])
+		]
+		return getRenderer().renderTemplate("/hbs/tabs/reactContentTab", model)
 	}
 
 	/**
@@ -52,11 +58,6 @@ class SystemExampleCustomSwitchesTabProvider extends AbstractSystemTabProvider {
 	 */
 	@Override
 	ContentSecurityPolicy getContentSecurityPolicy() {
-		def csp = new ContentSecurityPolicy()
-		csp.scriptSrc = '*.jsdelivr.net'
-		csp.frameSrc = '*.digitalocean.com'
-		csp.imgSrc = '*.wikimedia.org'
-		csp.styleSrc = 'https: *.bootstrapcdn.com'
-		csp
+		return null // bundle is same-origin; no extra CSP directives needed
 	}
 }
