@@ -5,15 +5,15 @@ import ArcusReactContentWithFocusUITab from "./ArcusReactContentWithFocusUITab";
 const PLUGIN_CODE = "arcus-system-example";
 const roots = new WeakMap();
 
-function readProps(el) {
+export const readProps = el => {
 	try {
 		return JSON.parse(el?.dataset?.reactProps || "{}");
 	} catch {
 		return {};
 	}
-}
+};
 
-function mount(el, Component) {
+export const mount = (el, Component) => {
 	if (!el) return;
 
 	// avoid double mount crash
@@ -26,9 +26,9 @@ function mount(el, Component) {
 	roots.set(el, root);
 
 	root.render(<Component {...readProps(el)} />);
-}
+};
 
-function safeUnmount(el) {
+export const safeUnmount = el => {
 	const root = roots.get(el);
 	if (!root) return;
 
@@ -36,9 +36,9 @@ function safeUnmount(el) {
 		root.unmount();
 		roots.delete(el);
 	}, 0);
-}
+};
 
-function register() {
+export const register = () => {
 	window.Morpheus = window.Morpheus || {};
 	window.Morpheus.pluginTabs = window.Morpheus.pluginTabs || {};
 
@@ -47,7 +47,7 @@ function register() {
 		mountReactContentWithFocusUIComponentsTab: el => mount(el, ArcusReactContentWithFocusUITab),
 		unmount: safeUnmount,
 	};
-}
+};
 
 if (window.Morpheus) {
 	register();
