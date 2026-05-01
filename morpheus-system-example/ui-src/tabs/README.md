@@ -532,3 +532,19 @@ Morpheus UI:
 
 ```
 ```
+## VITE CONFIG
+
+### Why Keep individual Vite config files.
+
+* IIFE builds do not support multiple entries in one build.
+* Input types and React tabs have different externals.
+* Debugging is clearer: vite.config.js for input types, vite.react-tab.config.js for tabs.
+* Build output is easier to verify.
+* Less mode-based hidden behavior.
+
+### When is it recommended to have combined vite config:
+
+* Use one combined config only if both bundles share the same externals, same output shape, and you want fewer files. 
+* In this case, separate was cleaner, please add vite config files in your plugin based on your usecase.
+
+
