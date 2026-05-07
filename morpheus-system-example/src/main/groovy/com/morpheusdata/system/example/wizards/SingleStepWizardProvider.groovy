@@ -80,9 +80,31 @@ class SingleStepWizardProvider extends com.morpheusdata.system.example.BaseProvi
                 required: false,
                 displayOrder: 2
             ),
-            StepInfoPanel
+            StepInfoPanel,
+            new OptionType(
+                code: 'email',
+                name: 'User Email',
+                fieldLabel: 'Email Address',
+                fieldName: 'email',
+                fieldContext: 'config',
+                fieldGroup: 'User Information',
+                inputType: OptionType.InputType.TEXT,
+                helpText: 'Please enter a valid email address.',
+                required: true,
+                displayOrder: 3
+            ),
+            new OptionType(
+                code: 'phone',
+                name: 'User Phone Number',
+                fieldLabel: 'Phone Number',
+                fieldName: 'phone',
+                fieldContext: 'config',
+                fieldGroup: 'User Information',
+                inputType: OptionType.InputType.TEXT,
+                required: false,
+                displayOrder: 4
+            )
         ]
-
         return [step]
     }
 
