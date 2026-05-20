@@ -115,7 +115,11 @@ class ArcusSystemProvider implements SystemProvider {
 
     @Override
     ServiceResponse initializeSystem(System system, SystemRequest systemRequest) {
-        return ServiceResponse.success(system)
+        system.status = 'uninitialized'
+        return ServiceResponse.success([
+            system: system,
+            status: 'uninitialized'
+        ])
     }
 
     @Override

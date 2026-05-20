@@ -122,6 +122,8 @@ class ArcusSystemConfigurationWorkflowProvider extends com.morpheusdata.system.e
         updatedState[stepCode] = stepData
         updatedState.lastCompletedStep = stepCode
         updatedState.lastUpdated = new Date()
+        updatedState.status = 'pending'
+        updatedState.completed = false
 
         return ServiceResponse.success([
             workflowState: updatedState
@@ -138,12 +140,15 @@ class ArcusSystemConfigurationWorkflowProvider extends com.morpheusdata.system.e
             return ServiceResponse.error("Invalid parent object type: ${parentObject.getClass().name}")
         }
 
+        configurationWorkflowState.status = configurationWorkflowState.status ?: 'incomplete'
+        configurationWorkflowState.completed = configurationWorkflowState.completed ?: false
+
         def jsonState = JsonOutput.toJson(configurationWorkflowState)
         parentObject.setConfigurationWorkflowState(jsonState)
 
-        return ServiceResponse.success([
-            workflowState: configurationWorkflowState
-        ])
+        parentObject.status = 'uninitialized'
+        parentObject.statusMessage = 'Configuration workflow in progress'
+        parentObject.save(flush: true, failOnError: true)
     }
 
     @Override
@@ -186,14 +191,18 @@ class ArcusSystemConfigurationWorkflowProvider extends com.morpheusdata.system.e
         }
         
         // Update configurationWorkflowState with submission info
-        configurationWorkflowState.status = 'submitted'
+        configurationWorkflowState.status = 'completed'
         configurationWorkflowState.submittedDate = new Date()
         configurationWorkflowState.completed = true
         configurationWorkflowState.lastUpdated = new Date()
 
+        parentObject.status = 'ok'
+        parentObject.statusMessage = null
+
         // Update the system's configurationWorkflowState
         def jsonState = JsonOutput.toJson(configurationWorkflowState)
         parentObject.setConfigurationWorkflowState(jsonState)
+        parentObject.save(flush: true, failOnError: true)
 
         // In a real implementation, this would trigger the actual setup process
         // For example: executeSystemSetup(system, configurationWorkflowState)

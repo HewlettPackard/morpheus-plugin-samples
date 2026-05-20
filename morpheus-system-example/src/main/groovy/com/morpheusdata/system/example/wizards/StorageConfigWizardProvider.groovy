@@ -37,18 +37,6 @@ class StorageConfigWizardProvider extends com.morpheusdata.system.example.BasePr
         
         storageStep.optionTypes = [
             new OptionType(
-                code: 'storageType',
-                name: 'Storage Type',
-                fieldName: 'storageType',
-                fieldLabel: 'Storage Type',
-                fieldContext: 'config',
-                inputType: OptionType.InputType.SELECT,
-                optionSource: 'storageTypes',
-                optionSourceType: 'arcus',
-                required: true,
-                displayOrder: 0
-            ),
-            new OptionType(
                 code: 'arrayCount',
                 name: 'Number of Arrays',
                 fieldName: 'arrayCount',
@@ -76,17 +64,6 @@ class StorageConfigWizardProvider extends com.morpheusdata.system.example.BasePr
                 inputType: OptionType.InputType.NUMBER,
                 required: true,
                 displayOrder: 0
-            ),
-            new OptionType(
-                code: 'redundancyLevel',
-                name: 'Redundancy Level',
-                fieldName: 'redundancyLevel',
-                fieldLabel: 'RAID Level',
-                fieldContext: 'config',
-                inputType: OptionType.InputType.SELECT,
-                optionSource: 'raidLevels',
-                required: true,
-                displayOrder: 1
             )
         ]
         

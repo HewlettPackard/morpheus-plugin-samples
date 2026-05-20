@@ -85,8 +85,7 @@ class SystemConfigWizardProvider extends com.morpheusdata.system.example.BasePro
                 fieldName: 'country',
                 fieldLabel: 'Country',
                 fieldContext: 'config',
-                inputType: OptionType.InputType.SELECT,
-                optionSource: 'countries',
+                inputType: OptionType.InputType.TEXT,
                 required: true,
                 displayOrder: 0
             ),
