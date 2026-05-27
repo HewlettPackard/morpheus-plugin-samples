@@ -57,7 +57,9 @@ class SystemConfigWizardProvider extends com.morpheusdata.system.example.BasePro
                 fieldContext: 'config',
                 inputType: OptionType.InputType.TEXT,
                 required: true,
-                displayOrder: 0
+                readOnly: true,
+                displayOrder: 0,
+                defaultValue: 'Arcus System'
             ),
             new OptionType(
                 code: 'group',
