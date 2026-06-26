@@ -213,6 +213,35 @@ new OptionType(
         unit: 'replicas'
     ]
 )
+
+### Custom Host Table OptionType
+
+This sample also includes a screenshot-style host table OptionType registered as `custom-host-table`.
+
+- UI component: `ui-src/components/CustomHostTable.jsx`
+- Registration bootstrap: `ui-src/main.js`
+- Wizard usage: `src/main/groovy/com/morpheusdata/system/example/wizards/HostConfigWizardProvider.groovy`
+
+Use it in a wizard OptionType with:
+
+```groovy
+def CUSTOM_HOST_TABLE = new OptionType.InputType("custom-host-table")
+
+new OptionType(
+  code: 'hostsTable',
+  name: 'Cluster Hosts',
+  fieldName: 'hostsTable',
+  fieldLabel: 'Cluster Hosts',
+  fieldContext: 'config',
+  inputType: CUSTOM_HOST_TABLE,
+  required: true,
+  displayOrder: 0,
+  helpText: 'Review and configure host management IPs, FQDN, and iLO addresses before proceeding.'
+)
+```
+
+The value submitted by this OptionType is an array of host row objects with fields like:
+`selected`, `serial`, `cpuFamily`, `managementIp`, `managementFqdn`, and `iloIp`.
 ```
 
 The JavaScript component in `custom-slider.js` registers with Morpheus:
