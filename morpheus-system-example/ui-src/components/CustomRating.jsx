@@ -108,7 +108,13 @@ const CustomRating = (props) => {
 
 // Registration function
 CustomRating.register = () => {
-	window.Morpheus.components.registerNew("custom-rating", CustomRating, {
+	const registry = window.Morpheus?.components;
+	if (typeof registry?.registerNew !== "function") {
+		console.error("Morpheus registerNew API not available for custom-rating");
+		return;
+	}
+
+	registry.registerNew("custom-rating", CustomRating, {
 		type: "optionType",
 		name: "Custom Rating",
 		group: "custom",

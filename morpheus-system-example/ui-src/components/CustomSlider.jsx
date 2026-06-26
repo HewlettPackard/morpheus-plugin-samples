@@ -72,7 +72,13 @@ const CustomSlider = (props) => {
 
 // Registration function
 CustomSlider.register = () => {
-	window.Morpheus.components.registerNew("custom-slider", CustomSlider, {
+	const registry = window.Morpheus?.components;
+	if (typeof registry?.registerNew !== "function") {
+		console.error("Morpheus registerNew API not available for custom-slider");
+		return;
+	}
+
+	registry.registerNew("custom-slider", CustomSlider, {
 		type: "optionType",
 		name: "Custom Slider",
 		group: "custom",
