@@ -29,33 +29,32 @@ class HostConfigWizardProvider extends com.morpheusdata.system.example.BaseProvi
 
     @Override
     List<WizardStep> getWizardSteps() {
+        def CUSTOM_HOST_TABLE = new OptionType.InputType("custom-host-table")
+
         def hostStep = new WizardStep(
             code: 'host-list',
-            name: 'Host List',
-            description: 'Configure host servers'
+            name: 'Hosts',
+            description: 'Review and configure the ESXi hosts listed below from your Private Cloud Installer setup. Verify the information is correct and update networking, credentials, or other settings as needed before proceeding.'
         )
+
+        def hostTableOptionType =  new OptionType(
+                code: 'hostsTable',
+                name: 'Cluster Hosts',
+                fieldName: 'hostsTable',
+                fieldLabel: 'Cluster Hosts',
+                fieldContext: 'config',
+                inputType: CUSTOM_HOST_TABLE,
+                required: true,
+                displayOrder: 0,
+                helpText: 'Review and configure host management IPs, FQDN, and iLO addresses before proceeding.'
+            );
+        hostTableOptionType.setConfigMap([
+            isFullWidth: true
+        ])
         
         hostStep.optionTypes = [
-            new OptionType(
-                code: 'hostCount',
-                name: 'Number of Hosts',
-                fieldName: 'hostCount',
-                fieldLabel: 'Number of Hosts',
-                fieldContext: 'config',
-                inputType: OptionType.InputType.NUMBER,
-                required: true,
-                displayOrder: 0
-            ),
-            new OptionType(
-                code: 'hostPrefix',
-                name: 'Host Name Prefix',
-                fieldName: 'hostPrefix',
-                fieldLabel: 'Host Name Prefix',
-                fieldContext: 'config',
-                inputType: OptionType.InputType.TEXT,
-                required: false,
-                displayOrder: 1
-            )
+            hostTableOptionType
+           
         ]
         
         def credentialsStep = new WizardStep(
@@ -128,8 +127,8 @@ class HostConfigWizardProvider extends com.morpheusdata.system.example.BaseProvi
         FormErrors formErrors = new FormErrors()
         
         def hostList = wizardData['host-list']
-        if (!hostList || !hostList['hostCount']) {
-            formErrors.addError('hostCount', 'Host count is required')
+        if (!hostList || !hostList['hostsTable']) {
+            formErrors.addError('hostsTable', 'At least one host row is required')
         }
         
         def credentials = wizardData['host-credentials']
