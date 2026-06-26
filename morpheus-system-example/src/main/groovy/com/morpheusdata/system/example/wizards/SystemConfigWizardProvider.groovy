@@ -48,7 +48,7 @@ class SystemConfigWizardProvider extends com.morpheusdata.system.example.BasePro
             description: 'System name and location'
         )
         
-        basicInfoStep.optionTypes = [
+        basicInfoStep.optionTypes = [     
             new OptionType(
                 code: 'systemName',
                 name: 'System Name',
@@ -71,7 +71,43 @@ class SystemConfigWizardProvider extends com.morpheusdata.system.example.BasePro
                 optionSource: 'groups',
                 required: true,
                 displayOrder: 1
+            ),
+            new OptionType(
+                code: 'endpoint',
+                name: 'Endpoint',
+                fieldName: 'endpoint',
+                fieldLabel: 'Endpoint',
+                fieldContext: 'config',
+                inputType: OptionType.InputType.TEXT,
+                required: false,
+                displayOrder: 3,
+                fieldGroup: 'Connection',
+                fieldGroupCollapsible: false
+            ),
+            new OptionType(
+                code: 'apiKey',
+                name: 'API Key',
+                fieldName: 'apiKey',
+                fieldLabel: 'API Key',
+                fieldContext: 'config',
+                inputType: OptionType.InputType.PASSWORD,
+                required: false,
+                displayOrder: 4,
+                fieldGroup: 'Connection'
+            ),
+            new OptionType(
+                code: 'retries',
+                name: 'Retries',
+                fieldName: 'retries',
+                fieldLabel: 'Retries',
+                fieldContext: 'config',
+                inputType: OptionType.InputType.NUMBER,
+                required: false,
+                displayOrder: 5,
+                fieldGroup: 'Advanced'
             )
+
+            
         ]
         
         def locationStep = new WizardStep(
