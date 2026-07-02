@@ -65,7 +65,13 @@ const CustomToggle = (props) => {
 
 // Registration function
 CustomToggle.register = () => {
-	window.Morpheus.components.registerNew("custom-toggle", CustomToggle, {
+	const registry = window.Morpheus?.components;
+	if (typeof registry?.registerNew !== "function") {
+		console.error("Morpheus registerNew API not available for custom-toggle");
+		return;
+	}
+
+	registry.registerNew("custom-toggle", CustomToggle, {
 		type: "optionType",
 		name: "Custom Toggle Switch",
 		group: "custom",
