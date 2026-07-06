@@ -93,6 +93,7 @@ class ArcusSystemProvider implements SystemProvider {
             description: 'Standard layout for Arcus infrastructure systems with configuration workflow',
             version: '1.0',
             systemType: systemType,
+            importable: true,
             configurationWorkflow: workflow  // Direct object reference
         )
         
@@ -126,6 +127,15 @@ class ArcusSystemProvider implements SystemProvider {
     ServiceResponse refreshSystem(System system) {
         return ServiceResponse.success()
     }
+
+    @Override
+    ServiceResponse importSystem(System system, SystemRequest systemRequest) {
+        log.info("importSystem — system.id={} configOptions={}", system?.id, systemRequest?.configOptions)
+        // Post-initialization work would go here (e.g. apply base config, register with external API)
+        ServiceResponse.success()
+    }
+
+
 
     private SystemComponentType createComponentType(String code, String name, String description, Class modelType) {
         SystemComponentType componentType = new SystemComponentType(
