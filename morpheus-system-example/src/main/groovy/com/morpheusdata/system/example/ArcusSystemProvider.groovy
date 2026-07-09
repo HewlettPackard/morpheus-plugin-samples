@@ -13,10 +13,12 @@ import com.morpheusdata.model.system.*
 import com.morpheusdata.model.system.System
 import com.morpheusdata.response.ServiceResponse
 import com.morpheusdata.system.example.workflow.ArcusSystemConfigurationWorkflowProvider
+import groovy.util.logging.Slf4j
 
 /**
  * System Provider for Arcus systems
  */
+@Slf4j
 class ArcusSystemProvider implements SystemProvider {
 
     Plugin plugin
