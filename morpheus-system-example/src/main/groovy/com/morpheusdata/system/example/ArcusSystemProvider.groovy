@@ -95,7 +95,8 @@ class ArcusSystemProvider implements SystemProvider {
             description: 'Standard layout for Arcus infrastructure systems with configuration workflow',
             version: '1.0',
             systemType: systemType,
-            importable: true,
+            creatable: true,   // supports the "Add System" -> Create flow
+            importable: true,  // also supports importing an existing Arcus system
             configurationWorkflow: workflow  // Direct object reference
         )
         
@@ -108,7 +109,28 @@ class ArcusSystemProvider implements SystemProvider {
             createComponentType('arcus-cluster', 'Arcus Cluster', 'Cluster management component', ComputeServerGroup.class)
         ]
 
-        return [layout]
+        // A second layout that only supports importing pre-existing Arcus systems — it is
+        // deliberately not creatable, so it never appears in the "Add System" -> Create flow,
+        // only in the Import flow.
+        SystemTypeLayout importOnlyLayout = new SystemTypeLayout(
+            code: 'arcus-import-only-layout',
+            name: 'Arcus Import-Only Layout',
+            description: 'Layout for importing pre-existing Arcus infrastructure systems only; cannot be used to create new systems',
+            version: '1.0',
+            systemType: systemType,
+            creatable: false,
+            importable: true,
+            configurationWorkflow: workflow
+        )
+        importOnlyLayout.components = [
+            createComponentType('arcus-switch', 'Arcus Switch', 'Network switch component', NetworkSwitch.class),
+            createComponentType('arcus-host', 'Arcus Host', 'Host/server component', ComputeServer.class),
+            createComponentType('arcus-storage', 'Arcus Storage', 'Storage array component', StorageServer.class),
+            createComponentType('arcus-network', 'Arcus Data Network', 'Data network component', Network.class),
+            createComponentType('arcus-cluster', 'Arcus Cluster', 'Cluster management component', ComputeServerGroup.class)
+        ]
+
+        return [layout, importOnlyLayout]
     }
 
     @Override
