@@ -33,7 +33,14 @@ The plugin implements a three-tier form/wizard/configuration workflow system bas
 SystemExamplePlugin (Main Plugin)
 └── ArcusSystemProvider (SystemProvider)
     ├── SystemType: arcus-system
-    └── SystemTypeLayout: arcus-standard-layout
+    ├── SystemTypeLayout: arcus-standard-layout (creatable: true, importable: true)
+    │   └── Components:
+    │       ├── arcus-switch
+    │       ├── arcus-host
+    │       ├── arcus-storage
+    │       ├── arcus-network
+    │       └── arcus-cluster
+    └── SystemTypeLayout: arcus-import-only-layout (creatable: false, importable: true)
         └── Components:
             ├── arcus-switch
             ├── arcus-host
@@ -148,6 +155,26 @@ The built plugin JAR will be in `build/libs/morpheus-system-example-1.0.0.jar`
 5. Follow the configuration workflow through each step
 6. Review the summary showing progress (2 of 7 complete, etc.)
 7. Click "Setup" to submit the configuration workflow
+
+### Layout capability flags
+
+Each `SystemTypeLayout` declares two independent boolean flags that control where it can be
+used from the Systems UI:
+
+- `creatable` (default `false`) - the layout appears under the **Create** flow when adding a
+  new system. A layout must explicitly opt in with `creatable: true` to be creatable.
+- `importable` (default `false`) - the layout appears under the **Import** flow for bringing an
+  existing Arcus system under management.
+
+A layout can support both, either, or neither:
+
+- `arcus-standard-layout` sets `creatable: true, importable: true` - it shows up in both the
+  Create and Import flows.
+- `arcus-import-only-layout` sets `creatable: false, importable: true` - it only shows up in the
+  Import flow.
+
+The "Add System" button itself is only shown when at least one active system type has a
+creatable or importable layout.
 
 ## Extending
 

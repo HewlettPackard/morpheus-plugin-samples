@@ -51,8 +51,6 @@ class SystemExamplePlugin extends Plugin {
             log.debug("Registering SingleStepWizardProvider")
             this.registerProvider(new SingleStepWizardProvider(this, morpheus))
 
-            log.debug("Registering FormValidationWizardProvider")
-            this.registerProvider(new FormValidationWizardProvider(this, morpheus))
 
             // PHASE 3: Register configuration workflow (depends on wizards)
             log.debug("Registering ArcusSystemConfigurationWorkflowProvider")
