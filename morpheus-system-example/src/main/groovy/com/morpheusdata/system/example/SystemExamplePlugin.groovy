@@ -50,6 +50,8 @@ class SystemExamplePlugin extends Plugin {
             this.registerProvider(new PrechecksWizardProvider(this, morpheus))
             log.debug("Registering SingleStepWizardProvider")
             this.registerProvider(new SingleStepWizardProvider(this, morpheus))
+            log.debug("Registering FormValidationWizardProvider")
+            this.registerProvider(new FormValidationWizardProvider(this, morpheus))
 
 
             // PHASE 3: Register configuration workflow (depends on wizards)

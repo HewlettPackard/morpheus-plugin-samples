@@ -52,6 +52,7 @@ class ArcusSystemConfigurationWorkflowProvider extends com.morpheusdata.system.e
         def clusterWizard = getWizardByCode('arcus-cluster-config-wizard')
         def prechecksWizard = getWizardByCode('arcus-prechecks-wizard')
         def singleStepWizard = getWizardByCode('single-step-form')
+        def formValidationWizard = getWizardByCode('form-validation-example')
 
         return [
             new ConfigurationWorkflowStep(
@@ -109,6 +110,13 @@ class ArcusSystemConfigurationWorkflowProvider extends com.morpheusdata.system.e
                 description: 'Single step configuration step for users',
                 dependsOn: [], // This step has no dependencies and can be completed at any time
                 wizard: singleStepWizard
+            ),
+            new ConfigurationWorkflowStep(
+                code: 'form-validation',
+                name: 'Form Field Groups',
+                description: 'Demonstrates field group titles and group-level descriptions',
+                dependsOn: [], // This step has no dependencies and can be completed at any time
+                wizard: formValidationWizard
             )
         ]
     }
