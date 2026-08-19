@@ -9,6 +9,8 @@ import com.morpheusdata.model.ComputeServerGroup
 import com.morpheusdata.model.Network
 import com.morpheusdata.model.NetworkSwitch
 import com.morpheusdata.model.StorageServer
+import com.morpheusdata.model.ActionType
+import com.morpheusdata.model.Wizard
 import com.morpheusdata.model.system.*
 import com.morpheusdata.model.system.System
 import com.morpheusdata.response.ServiceResponse
@@ -109,6 +111,10 @@ class ArcusSystemProvider implements SystemProvider {
             createComponentType('arcus-cluster', 'Arcus Cluster', 'Cluster management component', ComputeServerGroup.class)
         ]
 
+        // Actions surfaced on systems using this layout. Each ActionType is bound to a runtime
+        // ActionProvider through providerCode, which is the provider's namespace + '.' + key.
+        layout.actionTypes = getSampleActionTypes()
+
         // A second layout that only supports importing pre-existing Arcus systems — it is
         // deliberately not creatable, so it never appears in the "Add System" -> Create flow,
         // only in the Import flow.
@@ -153,6 +159,108 @@ class ArcusSystemProvider implements SystemProvider {
 
 
         return [layout, importOnlyLayout, neitherLayout]
+    }
+
+    /**
+     * Sample ActionTypes demonstrating the different flavors of ActionProvider registered by
+     * this plugin: a simple action, a state aware action, a wizard backed action and a bulk action.
+     */
+    private List<ActionType> getSampleActionTypes() {
+        ActionType healthCheck = new ActionType(
+            code: 'arcus-system-health-check',
+            providerCode: 'arcus.system.healthCheck',
+            name: 'Run Health Check',
+            messageCode: 'arcus.action.healthCheck',
+            description: 'Runs a read only health check across every component in the system',
+            category: 'diagnostics',
+            sortOrder: 10
+        )
+
+        ActionType maintenanceMode = new ActionType(
+            code: 'arcus-system-maintenance-mode',
+            providerCode: 'arcus.system.maintenanceMode',
+            name: 'Toggle Maintenance Mode',
+            messageCode: 'arcus.action.maintenanceMode',
+            description: 'Places the system into or out of maintenance mode',
+            category: 'lifecycle',
+            sortOrder: 20
+        )
+
+        // Wizard backed action - the wizard is resolved from its provider the same way the
+        // configuration workflow is, so the layout ships a fully populated Wizard object.
+        ActionType firmwareUpgrade = new ActionType(
+            code: 'arcus-system-firmware-upgrade',
+            providerCode: 'arcus.system.firmwareUpgrade',
+            name: 'Upgrade Firmware',
+            messageCode: 'arcus.action.firmwareUpgrade',
+            description: 'Collects upgrade options through a wizard and queues a firmware upgrade',
+            category: 'lifecycle',
+            sortOrder: 30,
+            wizard: getWizardByCode('arcus-firmware-upgrade-wizard')
+        )
+
+        ActionType restartComponents = new ActionType(
+            code: 'arcus-component-restart',
+            providerCode: 'arcus.component.restart',
+            name: 'Restart Components',
+            messageCode: 'arcus.action.restartComponents',
+            description: 'Restarts one or more selected components',
+            category: 'lifecycle',
+            sortOrder: 40
+        )
+
+        return [healthCheck, maintenanceMode, firmwareUpgrade, restartComponents]
+    }
+
+    /**
+     * Sample ActionTypes demonstrating the different flavors of ActionProvider registered by
+     * this plugin: a simple action, a state aware action, a wizard backed action and a bulk action.
+     */
+    private List<ActionType> getSampleActionTypes() {
+        ActionType healthCheck = new ActionType(
+            code: 'arcus-system-health-check',
+            providerCode: 'arcus.system.healthCheck',
+            name: 'Run Health Check',
+            messageCode: 'arcus.action.healthCheck',
+            description: 'Runs a read only health check across every component in the system',
+            category: 'diagnostics',
+            sortOrder: 10
+        )
+
+        ActionType maintenanceMode = new ActionType(
+            code: 'arcus-system-maintenance-mode',
+            providerCode: 'arcus.system.maintenanceMode',
+            name: 'Toggle Maintenance Mode',
+            messageCode: 'arcus.action.maintenanceMode',
+            description: 'Places the system into or out of maintenance mode',
+            category: 'lifecycle',
+            sortOrder: 20
+        )
+
+        // Wizard backed action - the wizard is resolved from its provider the same way the
+        // configuration workflow is, so the layout ships a fully populated Wizard object.
+        ActionType firmwareUpgrade = new ActionType(
+            code: 'arcus-system-firmware-upgrade',
+            providerCode: 'arcus.system.firmwareUpgrade',
+            name: 'Upgrade Firmware',
+            messageCode: 'arcus.action.firmwareUpgrade',
+            description: 'Collects upgrade options through a wizard and queues a firmware upgrade',
+            category: 'lifecycle',
+            sortOrder: 30,
+            wizard: getWizardByCode('arcus-firmware-upgrade-wizard')
+        )
+
+        ActionType restartComponents = new ActionType(
+            code: 'arcus-component-restart',
+            providerCode: 'arcus.component.restart',
+            name: 'Restart Components',
+            messageCode: 'arcus.action.restartComponents',
+            description: 'Restarts one or more selected components',
+            category: 'lifecycle',
+            sortOrder: 40
+        )
+
+        return [healthCheck, maintenanceMode, firmwareUpgrade, restartComponents]
     }
 
     @Override
@@ -207,6 +315,20 @@ class ArcusSystemProvider implements SystemProvider {
         }
         
         // Fallback - return null if provider not found
+        return null
+    }
+
+    /**
+     * Helper method to retrieve a Wizard from its WizardProvider by code, used to attach a
+     * wizard to an ActionType.
+     */
+    private Wizard getWizardByCode(String wizardCode) {
+        def wizardProvider = plugin.getProviderByCode(wizardCode)
+
+        if (wizardProvider instanceof com.morpheusdata.core.providers.WizardProvider) {
+            return wizardProvider.getWizard()
+        }
+
         return null
     }
 }

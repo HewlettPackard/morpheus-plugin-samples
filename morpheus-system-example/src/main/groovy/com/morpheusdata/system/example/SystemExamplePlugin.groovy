@@ -2,6 +2,7 @@ package com.morpheusdata.system.example
 
 import com.morpheusdata.core.Plugin
 import com.morpheusdata.model.Icon
+import com.morpheusdata.system.example.actions.*
 import com.morpheusdata.system.example.datasets.StorageTypeDatasetProvider
 import com.morpheusdata.system.example.workflow.ArcusSystemConfigurationWorkflowProvider
 import com.morpheusdata.system.example.wizards.*
@@ -53,6 +54,18 @@ class SystemExamplePlugin extends Plugin {
             log.debug("Registering FormValidationWizardProvider")
             this.registerProvider(new FormValidationWizardProvider(this, morpheus))
 
+            log.debug("Registering FirmwareUpgradeWizardProvider")
+            this.registerProvider(new FirmwareUpgradeWizardProvider(this, morpheus))
+
+            // PHASE 2b: Register action providers (referenced by the system layout's action types)
+            log.debug("Registering SystemHealthCheckActionProvider")
+            this.registerProvider(new SystemHealthCheckActionProvider(this, morpheus))
+            log.debug("Registering SystemMaintenanceModeActionProvider")
+            this.registerProvider(new SystemMaintenanceModeActionProvider(this, morpheus))
+            log.debug("Registering SystemFirmwareUpgradeActionProvider")
+            this.registerProvider(new SystemFirmwareUpgradeActionProvider(this, morpheus))
+            log.debug("Registering RestartComponentsActionProvider")
+            this.registerProvider(new RestartComponentsActionProvider(this, morpheus))
 
             // PHASE 3: Register configuration workflow (depends on wizards)
             log.debug("Registering ArcusSystemConfigurationWorkflowProvider")
