@@ -156,6 +156,32 @@ The built plugin JAR will be in `build/libs/morpheus-system-example-1.0.0.jar`
 6. Review the summary showing progress (2 of 7 complete, etc.)
 7. Click "Setup" to submit the configuration workflow
 
+### Cluster update API example
+
+The Arcus provider implements `ClusterProvider.ClusterUpdateFacet`. To attach an existing cluster
+to an Arcus system, add an `arcus-cluster` component and provide the cluster ID in its config:
+
+```json
+{
+  "component": {
+    "typeCode": "arcus-cluster",
+    "name": "Arcus Cluster",
+    "config": {
+      "clusterId": 123
+    }
+  }
+}
+```
+
+The component lifecycle links the `SystemComponent` to that `ComputeServerGroup` and creates an
+enabled, plugin-backed `UpdateDefinition` for the cluster type. The system-scoped cluster update
+endpoints can then list and apply the example update.
+
+For an end-to-end example, use a cluster type whose registered provider is this plugin's
+`ClusterUpdateFacet`. Morpheus dispatches plugin-backed cluster updates by the target cluster type;
+linking an unrelated provider's cluster demonstrates component attachment and update discovery,
+but that cluster provider remains responsible for executing the update.
+
 ### Layout capability flags
 
 Each `SystemTypeLayout` declares two independent boolean flags that control where it can be
